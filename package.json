@@ -1,0 +1,29 @@
+{
+  "name": "task-now-backend",
+  "version": "1.0.0",
+  "description": "Backend para task-now, aplicación de manejo de tareas.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Codifica2/task-now-backend.git"
+  },
+  "author": "Pedro Yáñez",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Codifica2/task-now-backend/issues"
+  },
+  "homepage": "https://github.com/Codifica2/task-now-backend#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
