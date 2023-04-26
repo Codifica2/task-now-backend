@@ -1,7 +1,9 @@
-require('dotenv').config()
-
 const express = require('express')
 const app = express()
+const cors = require('cors')
+const errorHandler = require('./middleware/errorHandler')
+require('dotenv').config()
+
 
 app.get("/", (req, res) => {
     response.send('<h1>Hello world!</h1>')
