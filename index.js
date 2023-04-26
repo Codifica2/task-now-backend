@@ -4,6 +4,8 @@ const cors = require('cors')
 const errorHandler = require('./middleware/errorHandler')
 require('dotenv').config()
 
+app.use(cors())
+app.use(express.json())
 
 app.get("/", (req, res) => {
     response.send('<h1>Hello world!</h1>')
