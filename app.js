@@ -7,7 +7,7 @@ const mongoose = require('mongoose')
 const unknownEndpoint = require('./middleware/unknownEndpoint')
 mongoose.set('strictQuery', false)
 
-mongoose.connect(process.env.PORT)
+mongoose.connect(process.env.MONGODB_URI)
     .then(() => {
         console.log("connected to MongoDB")
     })
