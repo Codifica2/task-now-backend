@@ -1,4 +1,4 @@
-const config = require('./utils/config')
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const cors = require('cors')
@@ -7,7 +7,7 @@ const mongoose = require('mongoose')
 const unknownEndpoint = require('./middleware/unknownEndpoint')
 mongoose.set('strictQuery', false)
 
-mongoose.connect(config.MONGODB_URI)
+mongoose.connect(process.env.PORT)
     .then(() => {
         console.log("connected to MongoDB")
     })
@@ -24,9 +24,8 @@ app.use(express.json())
 // ej: const taskRouter = require('./controllers/taskRouter')
 
 
-
 // Otros middleware que deben cargarse al final
 app.use(unknownEndpoint)
 app.use(errorHandler)
 
-module.exports(app)
+module.exports = app
