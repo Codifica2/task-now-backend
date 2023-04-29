@@ -6,7 +6,7 @@ const taskSchema = new mongoose.Schema({
     "due_date": Date,
     "category": String,
     "status": String,
-    "creador": String, // should be a user's id
+    "creator": String, // should be a user's id
     "assigned": [] // should be one or many user ids
 });
 
