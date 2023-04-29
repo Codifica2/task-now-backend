@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const categorySchema = new Schema({
-    nombre : String,
-    usuario: String,
+    name : String,
+    user: String,
     color : String 
 })
 
