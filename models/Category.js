@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const categorySchema = new Schema({
-    nombre : String,
-    usuario: String,
+    name : String,
+    user: String,
     color : String 
 })
 
@@ -16,4 +16,4 @@ categorySchema.set('toJSON', {
     }
   })
   
-  module.exports = mongoose.model('Categoria', categorySchema)
+  module.exports = mongoose.model('Category', categorySchema)
