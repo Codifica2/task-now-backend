@@ -16,4 +16,4 @@ categorySchema.set('toJSON', {
     }
   })
   
-  module.exports = mongoose.model('Categoria', categorySchema)
+  module.exports = mongoose.model('Category', categorySchema)
