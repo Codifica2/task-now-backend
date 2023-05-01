@@ -1,6 +1,12 @@
 const tasksRouter = require('express').Router()
 const Task = require('../models/Task')
 
+tasksRouter.get('/api/tasks', (request, response) => {
+    Task.find({}).then(tasks => {
+      response.json(tasks)
+    })
+  })
+
 tasksRouter.post('/api/tasks', (request, response, next) =>{
     const body = request.body
     
