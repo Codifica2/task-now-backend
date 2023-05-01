@@ -3,10 +3,11 @@ const mongoose = require('mongoose')
 const taskSchema = new mongoose.Schema({
     "title": String,
     "description": String,
-    "expiry-date": Date,
+    "due_date": Date,
     "category": String,
     "status": String,
-    "creator": String, // should be a users id
+    "creator": String, // should be a user's id
+    "assigned": [] // should be one or many user ids
 });
 
 taskSchema.set('toJSON', {
