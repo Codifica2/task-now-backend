@@ -5,10 +5,10 @@ tasksRouter.post('/api/tasks', (request, response, next) =>{
     const body = request.body
     
     const task = new Task({
-        titulo: body.titulo,
-        descripcion: body.descripcion,
-        fecha_vencimiento: body.fecha_vencimiento,
-        categoria: body.categoria,
+        title: body.title,
+        description: body.description,
+        due_date: body.due_date,
+        category: body.category,
         status: "pending",
     })
 
