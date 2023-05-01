@@ -23,7 +23,7 @@ tasksRouter.post('/api/tasks', (request, response, next) =>{
         .catch(error => next(error))
 })
 
-tasksRouter.get('/:id', (request, response, next) => {
+tasksRouter.get('/api/tasks/:id', (request, response, next) => {
     Task.findById(request.params.id)
         .then(task => {
             if(task) {
