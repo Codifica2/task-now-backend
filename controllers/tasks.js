@@ -21,7 +21,7 @@ tasksRouter.post('/api/tasks', (request, response, next) =>{
     task.save()
         .then(savedTask => {
             if (savedTask){
-                response.status(201).json(savedTask)
+                response.status(201).json({id: savedTask.id,title: savedTask.title, description: savedTask.description, due_date: savedTask.due_date, category: savedTask.category, status: savedTask.status})
             } else { 
                 response.status(401).json({error: "Invalid credentials", status: 401})
             }
