@@ -11,7 +11,7 @@ usersRouter.post("/api/users", async (request, response) => {
   const user = new User({
     name,
     lastname,
-    passwordHash,
+    password: passwordHash,
     email,
   });
 
