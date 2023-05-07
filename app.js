@@ -26,7 +26,6 @@ app.use(cors());
 app.use(express.json());
 app.use(requestLogger);
 
-
 // Endpoints
 // Para crear un endpoint, crear el handler en la carpeta controllers
 // luego importarlo y usarlo como middleware
