@@ -21,8 +21,6 @@ usersRouter.post("/api/users", async (request, response) => {
 
 usersRouter.put("/api/users/:id", (request, response, next) => {
   const body = request.body;
-  console.log(body);
-  console.log(body.content);
 
   const newUser = {
     name: body.name,
@@ -30,8 +28,6 @@ usersRouter.put("/api/users/:id", (request, response, next) => {
     password: body.hashed_password,
     photo: body.photo,
   };
-
-  console.log(newUser);
 
   Object.keys(newUser).forEach((k) => newUser[k] == "" && delete newUser[k]);
 
