@@ -7,14 +7,15 @@ usersRouter.post('/login', async (request,response)=>{
     const email = request.body.email
     const password = request.body.password
     const user = await User.findOne({email})
-    
     if (!user){
-        response.status(401).send({error: "Invalid credentials", status: 401})
+        return response.status(401).send({error: "Invalid credentials", status: 401})
     }
-    const checkPassword = bcrypt.compare(password, user.password)
+
+    const checkPassword = await bcrypt.compare(password, user.password)
+    console.log(checkPassword)
     if (checkPassword){
-        //token ? idk
-        const token = jwt.sign({
+        //creacion de token con atributos usuarios
+        const token = await jwt.sign({
             name: user.name,
             id: user.id
             }, process.env.TOKEN_SECRET,
@@ -26,7 +27,7 @@ usersRouter.post('/login', async (request,response)=>{
         response.status(200).send({id: user.id,name: user.name, email: user.email, auth_token: token})
     }
     else{
-        response.status(401).send({error: "Invalid credentials", status: 401})
+        return response.status(401).send({error: "Invalid credentials", status: 401})
     }
 })
 
