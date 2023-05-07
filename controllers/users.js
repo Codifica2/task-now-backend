@@ -13,7 +13,7 @@ usersRouter.post('/login', async (request,response)=>{
     }
     const checkPassword = bcrypt.compare(password, user.password)
     if (checkPassword){
-        //token ? idk
+        //creacion de token con atributos usuarios
         const token = jwt.sign({
             name: user.name,
             id: user.id
