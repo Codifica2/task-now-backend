@@ -3,7 +3,7 @@ const User = require('../models/User')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 
-usersRouter.post('/login', async (request,response)=>{
+usersRouter.post('api/login', async (request,response)=>{
     const email = request.body.email
     const password = request.body.password
     const user = await User.findOne({email})
@@ -12,7 +12,6 @@ usersRouter.post('/login', async (request,response)=>{
     }
 
     const checkPassword = await bcrypt.compare(password, user.password)
-    console.log(checkPassword)
     if (checkPassword){
         //creacion de token con atributos usuarios
         const token = await jwt.sign({
