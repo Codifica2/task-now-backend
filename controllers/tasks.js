@@ -41,4 +41,20 @@ tasksRouter.get('/api/tasks/:id', (request, response, next) => {
         .catch(error => next(error))
 })
 
+tasksRouter.delete('/api/tasks/:id', async (request, res) => {
+    const taskId = request.params.id;
+
+    try {
+      const deletedTask = await Task.findByIdAndDelete(taskId);
+  
+      if (!deletedTask) {
+        return res.status(404).json({ error: 'Task Not Found' });
+      }
+      res.status(200).end();
+
+    } catch (error) {
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+  
 module.exports = tasksRouter
