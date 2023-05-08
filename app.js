@@ -4,7 +4,6 @@ const express = require("express");
 const app = express();
 
 const cors = require("cors");
-
 const errorHandler = require("./middleware/errorHandler");
 const unknownEndpoint = require("./middleware/unknownEndpoint");
 const requestLogger = require("./middleware/requestLogger");
@@ -26,6 +25,7 @@ mongoose
 app.use(cors());
 app.use(express.json());
 app.use(requestLogger);
+
 
 // Endpoints
 // Para crear un endpoint, crear el handler en la carpeta controllers
