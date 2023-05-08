@@ -1,7 +1,7 @@
 const usersRouter = require('express').Router()
 const User = require('../models/User')
 const jwt = require('jsonwebtoken')
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcrypt')
 
 usersRouter.post('/api/login', async (request,response)=>{
     const email = request.body.email
