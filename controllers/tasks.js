@@ -41,4 +41,38 @@ tasksRouter.get('/api/tasks/:id', (request, response, next) => {
         .catch(error => next(error))
 })
 
+tasksRouter.put('/api/tasks/:id', (request, response, next) => {
+
+    const taskId = request.params.id;
+    const updateFields = request.body;
+  
+    if (Object.keys(updateFields).length === 0) {
+      return response.status(400).json({ error: 'No Data To Update' });
+    }
+  
+    Task.findByIdAndUpdate(
+      taskId,
+      updateFields,
+      { new: true, runValidators: true },
+      (error, updatedTask) => {
+        if (error) {
+          if (error.name === 'CastError') {
+            return response.status(400).json({ error: 'Incorrect Data Format' });
+
+          } else if (error.name === 'UnauthorizedError'){
+            return response.status(401).json({ error: 'Invalid credentials' });
+
+          }else {
+            return response.status(500).json({ error: 'Internal Server' });
+          }
+        }
+        if (!updatedTask) {
+          return response.status(404).end();
+        }
+
+        response.status(200).json(updatedTask);
+      }
+    );
+  });
+
 module.exports = tasksRouter
