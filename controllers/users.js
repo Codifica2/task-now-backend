@@ -3,7 +3,7 @@ const User = require('../models/User')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 
-usersRouter.post('api/login', async (request,response)=>{
+usersRouter.post('/api/login', async (request,response)=>{
     const email = request.body.email
     const password = request.body.password
     const user = await User.findOne({email})
