@@ -1,13 +1,41 @@
+const verifyToken = require("../middleware/verifyToken");
 const tasksRouter = require("express").Router();
 const Task = require("../models/Task");
 
-tasksRouter.get("/api/tasks", (request, response) => {
+tasksRouter.get("/api/tasks", verifyToken, (request, response) => {
   Task.find({}).then((tasks) => {
     response.json(tasks);
   });
 });
 
-tasksRouter.post("/api/tasks", (request, response, next) => {
+tasksRouter.get("/api/tasks/:id", verifyToken, (request, response, next) => {
+  Task.findById(request.params.id)
+    .then((task) => {
+      if (task) {
+        response.json(task);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
+});
+
+tasksRouter.delete("/api/tasks/:id", verifyToken, async (request, res) => {
+  const taskId = request.params.id;
+
+  try {
+    const deletedTask = await Task.findByIdAndDelete(taskId);
+
+    if (!deletedTask) {
+      return res.status(404).json({ error: "Task Not Found" });
+    }
+    res.status(200).end();
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+tasksRouter.post("/api/tasks", verifyToken, (request, response, next) => {
   const body = request.body;
 
   const task = new Task({
@@ -39,36 +67,8 @@ tasksRouter.post("/api/tasks", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-tasksRouter.get("/api/tasks/:id", (request, response, next) => {
-  Task.findById(request.params.id)
-    .then((task) => {
-      if (task) {
-        response.json(task);
-      } else {
-        response.status(404).end();
-      }
-    })
-    .catch((error) => next(error));
-});
-
-tasksRouter.delete('/api/tasks/:id', async (request, res) => {
-    const taskId = request.params.id;
-
-    try {
-      const deletedTask = await Task.findByIdAndDelete(taskId);
-  
-      if (!deletedTask) {
-        return res.status(404).json({ error: 'Task Not Found' });
-      }
-      res.status(200).end();
-
-    } catch (error) {
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
-
-tasksRouter.put('/api/tasks/:id', (request, response, next) => {
-  const body = request.body
+tasksRouter.put("/api/tasks/:id", verifyToken, (request, response, next) => {
+  const body = request.body;
 
   Task.findByIdAndUpdate(request.params.id, body, { new: true })
     .then((updatedTask) => {

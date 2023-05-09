@@ -1,4 +1,6 @@
 const bcrypt = require("bcrypt");
+const usersRouter = require("express").Router();
+const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
 usersRouter.post("/api/users", async (request, response) => {
@@ -62,14 +64,12 @@ usersRouter.post("/api/login", async (request, response) => {
       }
     );
 
-    response
-      .status(200)
-      .send({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        auth_token: token,
-      });
+    response.status(200).send({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      auth_token: token,
+    });
   } else {
     return response
       .status(401)
