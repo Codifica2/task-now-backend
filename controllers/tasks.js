@@ -56,5 +56,29 @@ tasksRouter.delete('/api/tasks/:id', async (request, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-  
+
+tasksRouter.put('/api/tasks/:id', (request, response, next) => {
+  const body = request.body
+
+  Task.findByIdAndUpdate(request.params.id, body, { new: true })
+    .then(updatedTask => {
+      if(!updatedTask) {
+        response.status(404).json({error: "Task not found"}).end()
+      }
+      response.status(200).json(updatedTask)
+    })
+    .catch(error => {
+      if(error.name === "UnauthorizedError") {
+        response.status(401).json({error: "Invalid credentials"})
+      }
+      else if(error.name === "CastError") {
+        response.status(400).json({error: "Incorrect Data format"})
+      }
+      else {
+        response.status(500).json({error: "Internal Server Error"})
+      }
+    })
+
+})
+
 module.exports = tasksRouter

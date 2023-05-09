@@ -4,7 +4,6 @@ const express = require("express");
 const app = express();
 
 const cors = require("cors");
-
 const errorHandler = require("./middleware/errorHandler");
 const unknownEndpoint = require("./middleware/unknownEndpoint");
 const requestLogger = require("./middleware/requestLogger");
