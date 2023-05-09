@@ -3,9 +3,15 @@ const tasksRouter = require("express").Router();
 const Task = require("../models/Task");
 
 tasksRouter.get("/api/tasks", verifyToken, (request, response) => {
-  Task.find({}).then((tasks) => {
-    response.json(tasks);
-  });
+  Task.find({})
+    .then((tasks) => {
+      if (tasks) {
+        response.json(tasks);
+      } else {
+        response.status(404).end;
+      }
+    })
+    .catch((error) => next(error));
 });
 
 tasksRouter.get("/api/tasks/:id", verifyToken, (request, response, next) => {
@@ -49,20 +55,14 @@ tasksRouter.post("/api/tasks", verifyToken, (request, response, next) => {
   task
     .save()
     .then((savedTask) => {
-      if (savedTask) {
-        response.status(201).json({
-          id: savedTask.id,
-          title: savedTask.title,
-          description: savedTask.description,
-          due_date: savedTask.due_date,
-          category: savedTask.category,
-          status: savedTask.status,
-        });
-      } else {
-        response
-          .status(401)
-          .json({ error: "Invalid credentials", status: 401 });
-      }
+      response.status(201).json({
+        id: savedTask.id,
+        title: savedTask.title,
+        description: savedTask.description,
+        due_date: savedTask.due_date,
+        category: savedTask.category,
+        status: savedTask.status,
+      });
     })
     .catch((error) => next(error));
 });
@@ -75,17 +75,10 @@ tasksRouter.put("/api/tasks/:id", verifyToken, (request, response, next) => {
       if (!updatedTask) {
         response.status(404).json({ error: "Task not found" }).end();
       }
+
       response.status(200).json(updatedTask);
     })
-    .catch((error) => {
-      if (error.name === "UnauthorizedError") {
-        response.status(401).json({ error: "Invalid credentials" });
-      } else if (error.name === "CastError") {
-        response.status(400).json({ error: "Incorrect Data format" });
-      } else {
-        response.status(500).json({ error: "Internal Server Error" });
-      }
-    });
+    .catch((error) => next(error));
 });
 
 module.exports = tasksRouter;
