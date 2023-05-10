@@ -1,3 +1,4 @@
+const usersRouter = require("express").Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -62,14 +63,12 @@ usersRouter.post("/api/login", async (request, response) => {
       }
     );
 
-    response
-      .status(200)
-      .send({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        auth_token: token,
-      });
+    response.status(200).send({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      auth_token: token,
+    });
   } else {
     return response
       .status(401)
