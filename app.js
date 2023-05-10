@@ -7,6 +7,7 @@ const cors = require("cors");
 const errorHandler = require("./middleware/errorHandler");
 const unknownEndpoint = require("./middleware/unknownEndpoint");
 const requestLogger = require("./middleware/requestLogger");
+const categoriesRouter = require("./controllers/categories");
 const tasksRouter = require("./controllers/tasks");
 const usersRouter = require("./controllers/users");
 
@@ -30,6 +31,7 @@ app.use(requestLogger);
 // Para crear un endpoint, crear el handler en la carpeta controllers
 // luego importarlo y usarlo como middleware
 // ej: const taskRouter = require('./controllers/taskRouter')
+app.use(categoriesRouter);
 app.use(tasksRouter);
 app.use(usersRouter);
 
