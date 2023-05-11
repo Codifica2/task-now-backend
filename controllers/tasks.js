@@ -50,6 +50,8 @@ tasksRouter.post("/api/tasks", verifyToken, (request, response, next) => {
     due_date: body.due_date,
     category: body.category,
     status: "pending",
+    creator: body.creator,
+    assigned: body.assigned,
   });
 
   task
@@ -62,6 +64,8 @@ tasksRouter.post("/api/tasks", verifyToken, (request, response, next) => {
         due_date: savedTask.due_date,
         category: savedTask.category,
         status: savedTask.status,
+        creator: savedTask.creator,
+        assigned: savedTask.assigned,
       });
     })
     .catch((error) => next(error));
