@@ -414,7 +414,13 @@ describe("#edit profile", async () => {
 
   it("should return the edited user in the database", async () => {
     const newLastname = "Piedra";
-    const newUser = { ...user, lastname: newLastname };
+
+    const newUser = {
+      lastname: newLastname,
+    };
+
+    const task = new Task({ title: "Tarea", description: "Descripción" });
+    await task.save();
 
     const response = await request(app)
       .put(`/api/users/${user.id}`)
@@ -430,7 +436,9 @@ describe("#edit profile", async () => {
 
   it("should update only changed fields", async () => {
     const newLastname = "Yáñez";
-    const newUser = { ...user, lastname: newLastname };
+    const newUser = {
+      lastname: newLastname,
+    };
 
     const response = await request(app)
       .put(`/api/users/${user.id}`)
