@@ -7,6 +7,7 @@ const Category = require('../models/Category');
 const assert = require('chai').assert;
 const expect = require('chai').expect;
 const User = require("../models/User");
+const { after } = require("mocha");
 
 // Generate a fake verification token
 const generateFakeToken = (payload) => {
@@ -353,13 +354,84 @@ describe("#register", async () => {
 
     const response = await request(app)
       .post("/api/users")
-      .send(user)
-      .set("Accept", "application/json");
+      .set("Accept", "application/json")
+      .send(user);
 
     assert.strictEqual(response.status, 201);
     assert.strictEqual(response.body.name, user.name);
     assert.strictEqual(response.body.lastname, user.lastname);
     assert.strictEqual(response.body.email, user.email);
+  });
+
+  after(async () => {
+    await User.deleteMany({});
+  });
+});
+
+describe("#edit profile", async () => {
+  let user;
+  let token;
+
+  beforeEach(async () => {
+    user = new User({
+      name: "Pedro",
+      lastname: "Yáñez",
+      password: "123456",
+      email: "pedro.yanez@sansano.usm.cl",
+    });
+
+    await user.save();
+
+    user = await User.find({});
+    user = user[0];
+
+    token = jwt.sign(
+      {
+        name: user.name,
+        id: user.id,
+      },
+      process.env.TOKEN_SECRET
+    );
+  });
+
+  it("should return the edited user in the database", async () => {
+    const newLastname = "Piedra";
+    const newUser = { ...user, lastname: newLastname };
+
+    const response = await request(app)
+      .put(`/api/users/${user.id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .set("Accept", "application/json")
+      .send(newUser);
+
+    const updatedUser = response.body;
+
+    assert.strictEqual(response.statusCode, 200);
+    assert.strictEqual(updatedUser.lastname, newLastname);
+  });
+
+  it("should update only changed fields", async () => {
+    const newLastname = "Yáñez";
+    const newUser = { ...user, lastname: newLastname };
+
+    const response = await request(app)
+      .put(`/api/users/${user.id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .set("Accept", "application/json")
+      .send(newUser);
+
+    const updatedUser = response.body;
+
+    // What we wanted to change, changed
+    assert.strictEqual(updatedUser.lastname, newLastname);
+
+    // What we didn't change, stays the same
+    assert.strictEqual(updatedUser.name, user.name);
+    assert.strictEqual(updatedUser.email, user.email);
+  });
+
+  after(async () => {
+    await User.deleteMany({});
   });
 });
 
@@ -432,7 +504,14 @@ describe('Unit test for task endpoints', () => {
     const task = new Task({ title: 'Tarea', description: 'Descripción' });
     await task.save();
 
+<<<<<<< HEAD
     const response = await request(app).get(`/api/tasks/${task._id}`).set('Authorization', `Bearer ${token}`);
+=======
+    const response = await request(app)
+      .get(`/api/tasks/${task._id}`)
+      .set("Authorization", `Bearer ${token}`);
+
+>>>>>>> test: create tests for profile editing endpoint
     assert.strictEqual(response.status, 200);
     assert.strictEqual(response.body.title, task.title);
     assert.strictEqual(response.body.description, task.description);
