@@ -1,3 +1,4 @@
+const verifyToken = require("../middleware/verifyToken");
 const usersRouter = require("express").Router();
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
@@ -21,33 +22,38 @@ usersRouter.post("/api/users", async (request, response) => {
   response.status(201).json(savedUser);
 });
 
-usersRouter.put("/api/users/:id", (request, response, next) => {
-  const body = request.body;
+usersRouter.put(
+  "/api/users/:id",
+  verifyToken,
+  async (request, response, next) => {
+    const body = request.body;
 
-  const newUser = {
-    name: body.name,
-    lastname: body.lastname,
-    password: body.hashed_password,
-    photo: body.photo,
-  };
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(body.password, saltRounds);
 
-  Object.keys(newUser).forEach((k) => newUser[k] == "" && delete newUser[k]);
+    const newUser = {
+      name: body.name,
+      lastname: body.lastname,
+      password: passwordHash,
+      photo: body.photo,
+    };
 
-  User.findByIdAndUpdate(request.params.id, newUser, { new: true })
-    .then((updatedUser) => {
-      response.json(updatedUser);
-    })
-    .catch((error) => next(error));
-});
+    Object.keys(newUser).forEach((k) => newUser[k] == "" && delete newUser[k]);
+
+    User.findByIdAndUpdate(request.params.id, newUser, { new: true })
+      .then((updatedUser) => {
+        response.json(updatedUser);
+      })
+      .catch((error) => next(error));
+  }
+);
 
 usersRouter.post("/api/login", async (request, response) => {
   const email = request.body.email;
   const password = request.body.password;
 
-  if (!email || !password){
-    return response
-      .status(400)
-      .send({ error: "Missing Input", status: 400 });
+  if (!email || !password) {
+    return response.status(400).send({ error: "Missing Input", status: 400 });
   }
 
   const user = await User.findOne({ email });
