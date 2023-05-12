@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js",
+<<<<<<< HEAD
     "test": "mocha --timeout 10000"
+=======
+    "test": "mocha --timeout 5000"
+>>>>>>> chore: remove unused libraries
   },
   "repository": {
     "type": "git",
