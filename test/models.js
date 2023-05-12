@@ -1,3 +1,4 @@
+/*
 describe("#task", function () {
   it("should accept only the predetermined fields");
   it("should return id in string format");
@@ -13,3 +14,4 @@ describe("#user", function () {
   it("should accept only the predetermined fields");
   it("should return id in string format");
 });
+*/
