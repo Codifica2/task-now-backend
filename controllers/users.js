@@ -27,9 +27,12 @@ usersRouter.put(
   verifyToken,
   async (request, response, next) => {
     const body = request.body;
+    let passwordHash;
 
-    const saltRounds = 10;
-    const passwordHash = await bcrypt.hash(body.password, saltRounds);
+    if (body.password) {
+      const saltRounds = 10;
+      passwordHash = await bcrypt.hash(body.password, saltRounds);
+    }
 
     const newUser = {
       name: body.name,
