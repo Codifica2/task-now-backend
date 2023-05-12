@@ -1,7 +1,7 @@
 const request = require('supertest');
 const app = require('../app'); // Suponiendo que tu aplicación Express está en un archivo llamado app.js
 const Task = require('../models/Task');
-const assert = require('assert');
+const assert = require('chai').assert;
 const User = require('../models/User');
 const jwt = require("jsonwebtoken");
 
