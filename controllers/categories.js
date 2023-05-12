@@ -1,5 +1,4 @@
 const categoryRouter = require("express").Router();
-const { response } = require("../app");
 const Category = require("../models/Category");
 
 categoryRouter.get("/api/categories", (request, response) => {
