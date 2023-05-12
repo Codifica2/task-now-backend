@@ -435,7 +435,57 @@ describe("#edit profile", async () => {
   });
 });
 
-describe('Unit test for task endpoints', () => {
+describe("#protected endpoints", async () => {
+  it("should raise an error if the authorization header is not set", async () => {
+    const response = await request(app)
+      .get(`/api/tasks`)
+      .set("Accept", "application/json");
+
+    assert.strictEqual(response.statusCode, 401);
+  });
+
+  let user;
+  let token;
+  let task;
+
+  before(async () => {
+    // Create user to generate jwt
+    user = new User({
+      name: "Pedro",
+      lastname: "Yáñez",
+      password: "123456",
+      email: "pedro.yanez@sansano.usm.cl",
+    });
+
+    await user.save();
+
+    token = jwt.sign(
+      {
+        id: user.id,
+      },
+      process.env.TOKEN_SECRET
+    );
+
+    // Create task to check if response is correct
+    task = new Task({
+      title: "Dummy note",
+    });
+
+    await task.save();
+  });
+
+  it("should send a response if the authorization header is correctly set", async () => {
+    const response = await request(app)
+      .get(`/api/tasks`)
+      .set("Authorization", `Bearer ${token}`)
+      .set("Accept", "application/json");
+
+    assert.strictEqual(response.statusCode, 200);
+    assert.isTrue(response.body.length > 0);
+  });
+});
+
+describe("Unit test for task endpoints", () => {
   let token;
   beforeEach(async () => {
     try {const user = new User({ name: 'Sebita', lastName: 'Sebita', email: "sebita@usm.cl", password: "123456" });
