@@ -1,6 +1,5 @@
 const usersRouter = require("express").Router();
 const bcrypt = require("bcrypt");
-const usersRouter = require("express").Router();
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
@@ -44,6 +43,13 @@ usersRouter.put("/api/users/:id", (request, response, next) => {
 usersRouter.post("/api/login", async (request, response) => {
   const email = request.body.email;
   const password = request.body.password;
+
+  if (!email || !password){
+    return response
+      .status(400)
+      .send({ error: "Missing Input", status: 400 });
+  }
+
   const user = await User.findOne({ email });
   if (!user) {
     return response
@@ -59,6 +65,7 @@ usersRouter.post("/api/login", async (request, response) => {
         name: user.name,
         id: user.id,
       },
+      //token_secret is a variable define in .env
       process.env.TOKEN_SECRET,
       {
         expiresIn: "2h",
