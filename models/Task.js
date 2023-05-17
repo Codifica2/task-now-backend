@@ -12,6 +12,7 @@ const taskSchema = new mongoose.Schema({
 taskSchema.set("toJSON", {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();
+    returnedObject.creationDate = returnedObject._id.getTimestamp();
     delete returnedObject._id;
     delete returnedObject.__v;
   },
