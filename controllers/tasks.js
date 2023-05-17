@@ -2,7 +2,7 @@ const verifyToken = require("../middleware/verifyToken");
 const tasksRouter = require("express").Router();
 const Task = require("../models/Task");
 
-tasksRouter.get("/api/tasks", verifyToken, (request, response) => {
+tasksRouter.get("/api/tasks", verifyToken, (request, response, next) => {
   Task.find({})
     .then((tasks) => {
       if (tasks) {
