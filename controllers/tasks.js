@@ -44,7 +44,7 @@ tasksRouter.delete("/api/tasks/:id", verifyToken, async (request, res) => {
 tasksRouter.post("/api/tasks", verifyToken, (request, response, next) => {
   const body = request.body;
 
-  if(!body.task || !body.description || !body.due_date || !body.category){
+  if(!body.title && !body.description && !body.due_date && !body.category){
     return response.status(400).json({ error: "Missing Attribute(s)" });
   }
 

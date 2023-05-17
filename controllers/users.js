@@ -81,12 +81,12 @@ usersRouter.post("/api/login", async (request, response) => {
   if (!email || !password) {
     return response.status(400).send({ error: "Missing Input", status: 400 });
   }
-  
+
   const user = await User.findOne({ email });
   if (!user) {
     return response
       .status(401)
-      .send({ error: "Invalid credentials", status: 401 });
+      .send({ error: "Invalid Credentials", status: 401 });
   }
 
   const checkPassword = await bcrypt.compare(password, user.password);
@@ -113,7 +113,7 @@ usersRouter.post("/api/login", async (request, response) => {
   } else {
     return response
       .status(401)
-      .send({ error: "Invalid credentials", status: 401 });
+      .send({ error: "Invalid Credentials", status: 401 });
   }
 });
 
