@@ -6,7 +6,6 @@ const jwt = require("jsonwebtoken");
 
 // regex pattern to match an email structure
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const maliciousInput = "' OR '1'='1";
 
 usersRouter.post("/api/users", async (request, response) => {
   const { name, lastname, password, email } = request.body;
@@ -82,11 +81,7 @@ usersRouter.post("/api/login", async (request, response) => {
   if (!email || !password) {
     return response.status(400).send({ error: "Missing Input", status: 400 });
   }
-
-  if (email || password == maliciousInput){
-    return response.status(401).send({ error: "Invalid Credentials", status: 401 });
-  }
-
+  
   const user = await User.findOne({ email });
   if (!user) {
     return response

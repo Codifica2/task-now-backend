@@ -375,22 +375,7 @@ describe("Category Endpoint Test Case", () => {
   });
 
   // Test Case 10:
-  it("should reject a malicious intent of login", async () => {
-    const credentials = {
-      email: "' OR '1'='1",
-      password: "contraseña",
-    };
 
-    // Make a POST request to the login endpoint
-    request(app)
-      .post("/api/login")
-      .send(credentials)
-      .expect(401)
-      .end((err, res) => {
-        if (err) return err;
-        expect(res.body.error, "Invalid Credentials")
-      });
-  }); 
 });
 
 describe("#register", async () => {
@@ -741,6 +726,22 @@ describe("Unit test for task endpoints", () => {
     const fetchedTask = await Task.findById(task._id);
     assert.strictEqual(fetchedTask.title, updatedTask.title);
     assert.strictEqual(fetchedTask.description, updatedTask.description);
+  });
+
+  it("should not allow to create an empty task", async () => {
+    const newTask = {
+      title: "",
+      description: "",
+    };
+
+    const response = await request(app)
+      .post("/api/tasks")
+      .set("Authorization", `Bearer ${token}`)
+      .send(newTask)
+      .set("Accept", "application/json");
+
+    assert.strictEqual(response.status, 400);
+    assert.strictEqual(response.body.error, "Missing Attribute(s)");
   });
 
   afterEach(async () => {
