@@ -56,15 +56,7 @@ tasksRouter.post("/api/tasks", verifyToken, (request, response, next) => {
   task
     .save()
     .then((savedTask) => {
-      response.status(201).json({
-        id: savedTask.id,
-        title: savedTask.title,
-        description: savedTask.description,
-        due_date: savedTask.due_date,
-        category: savedTask.category,
-        status: savedTask.status,
-        creator: savedTask.creator,
-      });
+      response.status(201).json(savedTask);
     })
     .catch((error) => next(error));
 });
