@@ -74,6 +74,13 @@ categoryRouter.put("/api/categories/:id", (request, response, next) => {
 });
 
 categoryRouter.delete("/api/categories/:id", async (request, res, next) => {
+
+  if (!request.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+    return response
+      .status(400)
+      .send({ error: "Invalid ID format", status: 400 });
+  }
+  
   await Category.findByIdAndRemove(request.params.id);
   res.status(204).end();
 });

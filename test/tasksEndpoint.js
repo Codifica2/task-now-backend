@@ -66,7 +66,7 @@ describe("Login test case", () => {
       .expect(401)
       .end((err, res) => {
         if (err) return done(err);
-        assert.equal(res.body.error, "Invalid credentials");
+        assert.equal(res.body.error, "Invalid Credentials");
         done();
       });
   });
@@ -308,7 +308,7 @@ describe("Category Endpoint Test Case", () => {
   });
 
   // Test Case 6: Trying to update with a wrong id format
-  it("should return a 400 status and a Invalid ID format message ", (done) => {
+  it("should reject an invalid category id ", (done) => {
     const newCategory = {
       name: "Pruebas de Hardware",
       color: "Amarillo",
@@ -345,6 +345,7 @@ describe("Category Endpoint Test Case", () => {
         }
       });
   });
+
   // Test case 8: Get the list of categories
   it("should get the list of all categories and get a 200 status", (done) => {
     request(app)
@@ -359,6 +360,22 @@ describe("Category Endpoint Test Case", () => {
         done();
       });
   });
+
+  // Test Case 9: Delete a existing Category
+  it("should return an error if tried to delete a category with a wrong format id", async () => {
+    request(app)
+      .delete(`/api/categories/asdjiqwey18923792183712789euiwjlejqiejiwqojd81`) // Any unknown existing ID
+      .expect(400)
+      .end((err, res) => {
+        if (err) {
+          return err;
+        }
+        assert.strictEqual(res.body.error, "Invalid ID format");
+      });
+  });
+
+  // Test Case 10:
+
 });
 
 describe("#register", async () => {
@@ -380,6 +397,56 @@ describe("#register", async () => {
     assert.strictEqual(response.body.lastname, user.lastname);
     assert.strictEqual(response.body.email, user.email);
   });
+
+  it("should throw an error message if an user try to register with empty inputs", async () => {
+    const user = {
+      name: "",
+      lastname: "",
+      password: "",
+      email: "diego.Aguim@sansano.usm.cl",
+    };
+
+    const response = await request(app)
+      .post("/api/users")
+      .send(user);
+
+    assert.strictEqual(response.status, 400);
+    assert.strictEqual(response.body.error, "Missing user info");
+  });
+
+  it("it send an error message if tried to create an user with an existing email", async () => {
+    const user = {
+      name: "Pedro",
+      lastname: "Yáñez",
+      password: "123456",
+      email: "pedro.yanez@sansano.usm.cl",
+    };
+
+    const response = await request(app)
+      .post("/api/users")
+      .send(user);
+
+    assert.strictEqual(response.status, 409);
+    assert.strictEqual(response.body.error, "Email is already registered")
+  });
+
+  it("should send an error code if the email has a wrong format", async () => {
+    const user = {
+      name: "diego",
+      lastname: "aguilera",
+      password: "dsjakl",
+      email: "usm123123usm",
+    };
+
+    const response = await request(app)
+      .post("/api/users")
+      .send(user);
+
+    assert.strictEqual(response.status, 400);
+    assert.strictEqual(response.body.error, "Wrong Email format")
+  });
+  
+  //be careful here -w-
 
   after(async () => {
     await User.deleteMany({});
@@ -414,7 +481,13 @@ describe("#edit profile", async () => {
 
   it("should return the edited user in the database", async () => {
     const newLastname = "Piedra";
-    const newUser = { ...user, lastname: newLastname };
+
+    const newUser = {
+      lastname: newLastname,
+    };
+
+    const task = new Task({ title: "Tarea", description: "Descripción" });
+    await task.save();
 
     const response = await request(app)
       .put(`/api/users/${user.id}`)
@@ -430,7 +503,9 @@ describe("#edit profile", async () => {
 
   it("should update only changed fields", async () => {
     const newLastname = "Yáñez";
-    const newUser = { ...user, lastname: newLastname };
+    const newUser = {
+      lastname: newLastname,
+    };
 
     const response = await request(app)
       .put(`/api/users/${user.id}`)
@@ -448,9 +523,29 @@ describe("#edit profile", async () => {
     assert.strictEqual(updatedUser.email, user.email);
   });
 
+  it("should not allow to edit a profile with all the attributes missing, 400 status and an error message", async () => {
+    const newLastname = "";
+    const newUser = {
+      lastname: newLastname,
+    };
+
+    request(app)
+      .put(`/api/users/${user._id}`) //Should work on any known ID
+      .send(newUser)
+      .expect(400) 
+      .end((err, res) => {
+        if (err) {
+          return err;
+        }
+        // Assert that the message error is correct
+        assert.strictEqual(res.body.error, "Missing Attribute(s)");
+      });
+  });
+
   after(async () => {
     await User.deleteMany({});
   });
+
 });
 
 describe("#protected endpoints", async () => {
@@ -631,6 +726,22 @@ describe("Unit test for task endpoints", () => {
     const fetchedTask = await Task.findById(task._id);
     assert.strictEqual(fetchedTask.title, updatedTask.title);
     assert.strictEqual(fetchedTask.description, updatedTask.description);
+  });
+
+  it("should not allow to create an empty task", async () => {
+    const newTask = {
+      title: "",
+      description: "",
+    };
+
+    const response = await request(app)
+      .post("/api/tasks")
+      .set("Authorization", `Bearer ${token}`)
+      .send(newTask)
+      .set("Accept", "application/json");
+
+    assert.strictEqual(response.status, 400);
+    assert.strictEqual(response.body.error, "Missing Attribute(s)");
   });
 
   afterEach(async () => {

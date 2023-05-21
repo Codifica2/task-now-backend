@@ -2,7 +2,7 @@ const verifyToken = require("../middleware/verifyToken");
 const tasksRouter = require("express").Router();
 const Task = require("../models/Task");
 
-tasksRouter.get("/api/tasks", verifyToken, (request, response) => {
+tasksRouter.get("/api/tasks", verifyToken, (request, response, next) => {
   Task.find({})
     .then((tasks) => {
       if (tasks) {
@@ -44,6 +44,10 @@ tasksRouter.delete("/api/tasks/:id", verifyToken, async (request, res) => {
 tasksRouter.post("/api/tasks", verifyToken, (request, response, next) => {
   const body = request.body;
 
+  if(!body.title && !body.description && !body.due_date && !body.category){
+    return response.status(400).json({ error: "Missing Attribute(s)" });
+  }
+
   const task = new Task({
     title: body.title,
     description: body.description,
@@ -56,15 +60,7 @@ tasksRouter.post("/api/tasks", verifyToken, (request, response, next) => {
   task
     .save()
     .then((savedTask) => {
-      response.status(201).json({
-        id: savedTask.id,
-        title: savedTask.title,
-        description: savedTask.description,
-        due_date: savedTask.due_date,
-        category: savedTask.category,
-        status: savedTask.status,
-        creator: savedTask.creator,
-      });
+      response.status(201).json(savedTask);
     })
     .catch((error) => next(error));
 });
