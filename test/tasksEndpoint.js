@@ -375,14 +375,13 @@ describe("Category Endpoint Test Case", () => {
   });
 
   // Test Case 10:
-
 });
 
 describe("#register", async () => {
   it("should create a new user in the database", async () => {
     const user = {
-      name: "Pedro",
-      lastname: "Yáñez",
+      firstName: "Pedro",
+      lastName: "Yáñez",
       password: "123456",
       email: "pedro.yanez@sansano.usm.cl",
     };
@@ -406,9 +405,7 @@ describe("#register", async () => {
       email: "diego.Aguim@sansano.usm.cl",
     };
 
-    const response = await request(app)
-      .post("/api/users")
-      .send(user);
+    const response = await request(app).post("/api/users").send(user);
 
     assert.strictEqual(response.status, 400);
     assert.strictEqual(response.body.error, "Missing user info");
@@ -422,30 +419,26 @@ describe("#register", async () => {
       email: "pedro.yanez@sansano.usm.cl",
     };
 
-    const response = await request(app)
-      .post("/api/users")
-      .send(user);
+    const response = await request(app).post("/api/users").send(user);
 
     assert.strictEqual(response.status, 409);
-    assert.strictEqual(response.body.error, "Email is already registered")
+    assert.strictEqual(response.body.error, "Email is already registered");
   });
 
   it("should send an error code if the email has a wrong format", async () => {
     const user = {
-      name: "diego",
-      lastname: "aguilera",
+      firstName: "diego",
+      lastName: "aguilera",
       password: "dsjakl",
       email: "usm123123usm",
     };
 
-    const response = await request(app)
-      .post("/api/users")
-      .send(user);
+    const response = await request(app).post("/api/users").send(user);
 
     assert.strictEqual(response.status, 400);
-    assert.strictEqual(response.body.error, "Wrong Email format")
+    assert.strictEqual(response.body.error, "Wrong Email format");
   });
-  
+
   //be careful here -w-
 
   after(async () => {
@@ -532,7 +525,7 @@ describe("#edit profile", async () => {
     request(app)
       .put(`/api/users/${user._id}`) //Should work on any known ID
       .send(newUser)
-      .expect(400) 
+      .expect(400)
       .end((err, res) => {
         if (err) {
           return err;
@@ -545,7 +538,6 @@ describe("#edit profile", async () => {
   after(async () => {
     await User.deleteMany({});
   });
-
 });
 
 describe("#protected endpoints", async () => {
