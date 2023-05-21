@@ -8,27 +8,35 @@ const jwt = require("jsonwebtoken");
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 usersRouter.post("/api/users", async (request, response) => {
-  const { name, lastname, password, email } = request.body;
+  const { firstName, lastName, password, email } = request.body;
   const checkuser = await User.findOne({ email });
-  if (checkuser){
-    return response.status(409).send({ error: "Email is already registered", status: 409 });
+  if (checkuser) {
+    return response
+      .status(409)
+      .send({ error: "Email is already registered", status: 409 });
   }
-  
-  if (!email || !password || !lastname || !name) {
-    return response.status(400).send({ error: "Missing user info", status: 400 });
+
+  console.log(request.body);
+
+  if (!email || !password || !lastName || !firstName) {
+    return response
+      .status(400)
+      .send({ error: "Missing user info", status: 400 });
   }
 
   const isValidEmail = emailPattern.test(email);
-  if (!isValidEmail){
-    return response.status(400).send({ error: "Wrong Email format", status: 400 });
+  if (!isValidEmail) {
+    return response
+      .status(400)
+      .send({ error: "Wrong Email format", status: 400 });
   }
 
   const saltRounds = 10;
   const passwordHash = await bcrypt.hash(password, saltRounds);
 
   const user = new User({
-    name,
-    lastname,
+    firstName,
+    lastName,
     password: passwordHash,
     email,
   });
@@ -45,12 +53,13 @@ usersRouter.put(
     const body = request.body;
     let passwordHash;
 
-    // asuming that is not necesary to update your pfp 
+    // asuming that is not necesary to update your pfp
 
     if (!body.name && !body.password && !body.lastname) {
-      return response.status(400).send({ error: "Missing Attribute(s)", status: 400 });
+      return response
+        .status(400)
+        .send({ error: "Missing Attribute(s)", status: 400 });
     }
-
 
     if (body.password) {
       const saltRounds = 10;
