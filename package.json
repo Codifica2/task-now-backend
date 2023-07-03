@@ -7,7 +7,7 @@
     "dev": "nodemon index.js",
     "start": "node index.js",
     "test": "mocha --timeout 5000",
-    "build:ui": "powershell -ExecutionPolicy Bypass -Command \"if(Test-Path 'out'){Remove-Item -Recurse -Force 'out'};cd ../task-now-frontend;npm run build:full;Copy-Item out -Recurse ../task-now-backend\""
+    "build:ui": "rm -rf out && cd ../task-now-frontend && npm run build:full && cp -r out ../task-now-backend"
   },
   "repository": {
     "type": "git",
