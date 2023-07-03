@@ -16,8 +16,6 @@ usersRouter.post("/api/users", async (request, response) => {
       .send({ error: "Email is already registered", status: 409 });
   }
 
-  console.log(request.body);
-
   if (!email || !password || !lastName || !firstName) {
     return response
       .status(400)
@@ -125,5 +123,14 @@ usersRouter.post("/api/login", async (request, response) => {
       .send({ error: "Invalid Credentials", status: 401 });
   }
 });
+
+usersRouter.delete("/api/users", (request, response, next) => {
+  // Delete all users in database, used for testing
+  User.deleteMany({})
+    .then(() => {
+      response.status(204).end()
+    })
+    .catch(error => next(error));
+})
 
 module.exports = usersRouter;
