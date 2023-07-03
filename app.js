@@ -1,7 +1,23 @@
 require("dotenv").config();
 
 const express = require("express");
+const path = require('path');
 const app = express();
+
+// Ruta para los archivos estáticos
+app.use(express.static(path.join(__dirname, 'out')));
+
+// Ruta de inicio
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'out', 'index.html'));
+});
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'out', 'login.html'));
+});
+app.get('/register', (req, res) => {
+  res.sendFile(path.join(__dirname, 'out', 'register.html'));
+});
+
 
 const cors = require("cors");
 const errorHandler = require("./middleware/errorHandler");
@@ -34,6 +50,7 @@ app.use(requestLogger);
 app.use(categoriesRouter);
 app.use(tasksRouter);
 app.use(usersRouter);
+
 
 // Otros middleware que deben cargarse al final
 app.use(unknownEndpoint);
