@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js",
-    "test": "mocha --timeout 5000"
+    "test": "mocha --timeout 5000",
+    "build:ui": "powershell -ExecutionPolicy Bypass -Command \"if(Test-Path 'out'){Remove-Item -Recurse -Force 'out'};cd ../task-now-frontend;npm run build:full;Copy-Item out -Recurse ../task-now-backend\""
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.2.16",
     "chai": "^4.3.7",
     "mocha": "^10.2.0",
     "nodemon": "^2.0.22",
